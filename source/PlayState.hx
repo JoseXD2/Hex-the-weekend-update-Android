@@ -672,29 +672,27 @@ class PlayState extends MusicBeatState
 
 		if (Stage.curStage == "hexw" && SONG.songId.toLowerCase() == "cooling")
 		{
-			coolingVideo = new VideoSprite(-24, -224);
-                        coolingVideo.bitmap.canSkip = false;
-                        coolingVideo.bitmap.canUseAutoResize = false;
-			coolingVideo.playVideo(Paths.video('coolingVisualizer'), false, false);
-                        //coolingVideo.setGraphicSize(945, 472);
-		        //var perecentSupposed = (FlxG.sound.music.time / songMultiplier) / (FlxG.sound.music.length / songMultiplier);
+			coolingVideo = new FlxSprite(-24, -224);
 			coolingVideo.antialiasing = true;
 			coolingVideo.scrollFactor.set(0.9, 0.9);
-                        /*coolingVideo.bitmap.set_width(150);
-                        coolingVideo.bitmap.set_height(75);
-                        coolingVideo.width = 150;
-                        coolingVideo.height = 75;*/
-                        //coolingVideo.updateHitbox();
-                        coolingVideo.screenCenter(XY);
 			add(coolingVideo);
 
 			Debug.logTrace("starting vis");
-			coolingVideo.alpha = 0;
-		}
+			if (coolingHandler == null)
+			{
+				coolingHandler = new VideoHandler();
+				coolingHandler.playVideo(Paths.video('coolingVisualizer'), null, coolingVideo, false, false, true);
+			}
+			else
+			{
+				coolingVideo.loadGraphic(coolingHandler.bitmap.bitmapData);
 
-		for (i in Stage.toAdd)
-		{
-			add(i);
+				coolingVideo.setGraphicSize(945, 472);
+				var perecentSupposed = (FlxG.sound.music.time / songMultiplier) / (FlxG.sound.music.length / songMultiplier);
+				coolingHandler.bitmap.seek(perecentSupposed); // I laughed my ass off so hard when I found out this was a fuckin PERCENTAGE
+				coolingHandler.bitmap.resume();
+			}
+			coolingVideo.alpha = 0;
 		}
 
 		if (Stage.curStage == "hexwstage")
